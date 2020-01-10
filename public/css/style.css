@@ -1,0 +1,18 @@
+table {
+  /* border: 1px solid black; */
+  border-spacing: 0;
+}
+
+.pagination a {
+  text-decoration: none;
+  padding: 0 5px;
+}
+
+tr:nth-child(2n) {
+  background: #eee;
+}
+
+th, td {
+  /* border: 1px solid grey; */
+  padding: 2px 5px;
+}

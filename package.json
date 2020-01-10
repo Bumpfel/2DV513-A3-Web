@@ -1,0 +1,22 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "devstart": "nodemon app.js --inspector"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-hbs": "^2.3.0",
+    "mysql": "^2.17.1",
+    "nodemon": "^2.0.2"
+  },
+  "nodemonConfig": {
+    "ext": "js, json, css, html, hbs"
+  }
+}

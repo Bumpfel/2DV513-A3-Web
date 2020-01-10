@@ -1,0 +1,34 @@
+<a href="/">Home</a> / {{ table }}
+<br><br>
+ 
+<div class="pagination">
+  {{ pagination page RowsPerPage totalRows orderBy }}
+</div>
+
+<label for="isAdult">is adult movie</label>
+<input type="checkbox" name="isAdult">
+
+<table>
+  <tr>
+    {{#each fields as | field |}}
+    <th>
+      <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}">
+        {{ field.name }}
+      </a>
+    </th>
+    {{/each}}
+  </tr>
+
+  {{#each result as | tuple |}}
+  <tr>
+    {{#each tuple as | row |}}
+    <td>
+      {{ row }}
+    </td>
+    {{/each}}
+  </tr>
+  {{/each}}
+</table>
+
+<br>
+{{ numResults page RowsPerPage totalRows }}
