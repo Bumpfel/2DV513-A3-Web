@@ -6,7 +6,7 @@
 </div>
 
 <label for="isAdult">is adult movie</label>
-<input type="checkbox" name="isAdult">
+<input type="checkbox" id="isAdult" onselect="() => console.log('test')">
 
 <table>
   <tr>
@@ -32,3 +32,5 @@
 
 <br>
 {{ numResults page RowsPerPage totalRows }}
+
+<script src="/js/ovFilters.js"></script>

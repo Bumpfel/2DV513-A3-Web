@@ -4,8 +4,8 @@ const con = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  // database: 'imdb_data'
-  database: '2dv513a3'
+  database: 'imdb_data'
+  // database: '2dv513a3'
 })
 
 let reconnectInterval

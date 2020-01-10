@@ -16,3 +16,15 @@ th, td {
   /* border: 1px solid grey; */
   padding: 2px 5px;
 }
+
+.loader {
+  position: absolute;
+  top: 200px;
+  /* left: 500px; */
+  margin: 0 auto;
+  padding: 10px 15px;
+  border: 1px solid #222;
+  border-radius: 3px;
+
+  background-color: rgb(241, 228, 107);
+}
