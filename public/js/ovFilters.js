@@ -1,25 +1,103 @@
+'use strict'
+
 const loader = document.createElement('template')
 loader.innerHTML = `
-  <div class='loader'>
-    Loading...
-  </div>
+<div class='loader'>
+</div>
 `
+// <i class="fa fa-spinner fa-spin" />
 
-document.querySelector('#isAdult').addEventListener('click', e => {
-  const params = window.location.search || '?'
-  const test = new URLSearchParams(window.location.search)
+// <div class="box">
+// Loading...
+// </div>
 
-  window.location.href = params + '&filter=isAdult'
+const urlParams = new URLSearchParams(window.location.search)
+
+// set state of filters
+const adultFilter = document.querySelector('#adultFilter')
+if (urlParams.get('includeAdult')) {
+  adultFilter.checked = true
+}
+
+const genreFilter = document.querySelector('#genreFilter')
+const selectedGenre = urlParams.get('genre')
+if (selectedGenre) {
+  genreFilter.value = selectedGenre
+  if (selectedGenre === 'Adult') {
+    adultFilter.remove()
+    document.querySelector('label[for="adultFilter"').remove()
+  }
+}
+
+// pagination listeners
+document.querySelectorAll('.pagination').forEach(pagination => pagination.addEventListener('click', e => {
+  if (e.target.nodeName === 'A') {
+    displayLoader()
+  }
+}))
+
+// column sorting
+document.querySelector('#columnHeaders').addEventListener('click', e => {
+  e.preventDefault()
+  if (e.target.nodeName === 'A') {
+    const newOrder = e.target.id
+    const prevOrder = urlParams.get('orderBy') || ''
+
+    let sortOrder = prevOrder.split(' ')[1]
+    if (sortOrder === 'DESC') {
+      sortOrder = 'ASC'
+    } else if (sortOrder === 'ASC') {
+      sortOrder = 'DESC'
+    } else {
+      sortOrder = newOrder === 'primaryTitle' ? 'ASC' : 'DESC'
+    }
+
+    urlParams.set('orderBy', newOrder + ' ' + sortOrder
+    )
+
+    displayLoader()
+    window.location.href = '?' + urlParams.toString()
+  }
 })
 
+// search
 document.querySelector('#searchForm').addEventListener('submit', e => {
   e.preventDefault()
 
   const searchQuery = document.querySelector('input[type=search]').value
 
-  document.body.appendChild(loader.content.cloneNode(true))
+  urlParams.set('find', searchQuery)
 
-  const params = window.location.search || '?'
-  // const test = new URLSearchParams(window.location.search)
-  window.location.href = params + '&find=' + searchQuery
+  displayLoader()
+  window.location.href = '?' + urlParams.toString()
 })
+
+/* **** Filters ***** */
+// adult
+adultFilter.addEventListener('click', e => {
+  if (adultFilter.checked) {
+    urlParams.set('includeAdult', 'true')
+  } else {
+    urlParams.delete('includeAdult')
+  }
+
+  displayLoader()
+  window.location.href = '?' + urlParams.toString()
+})
+
+// genres
+genreFilter.addEventListener('change', e => {
+  const selectedGenre = genreFilter.value // genreFilter.item(genreFilter.selectedIndex).id
+
+  if (selectedGenre) {
+    urlParams.set('genre', selectedGenre)
+  } else {
+    urlParams.delete('genre')
+  }
+  displayLoader()
+  window.location.href = '?' + urlParams.toString()
+})
+
+const displayLoader = () => {
+  document.body.appendChild(loader.content.cloneNode(true))
+}

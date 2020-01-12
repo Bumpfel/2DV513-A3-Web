@@ -1,33 +1,31 @@
+'use strict'
+
 const db = require('../db/mysql')
 
 const controller = {}
 const RowsPerPage = 25
 
-const Table = { titles: 'Titles', names: 'Names' }
+const displayFields = ['primaryTitle', 'startYear', 'endYear', 'averageRating', 'numVotes']
 
 controller.getNamesOverview = async (req, res) => {
-  getOverview(req, res, Table.names)
+  getOverview(req, res)
 }
 
 controller.getTitlesOverview = async (req, res) => {
-  getOverview(req, res, Table.titles)
+  getOverview(req, res)
 }
 
-const getOverview = (req, res, table) => {
-  let page = req.query.page || 0
-  page = parseInt(page)
+const getOverview = (req, res) => {
   const orderBy = req.query.orderBy || 'id'
-  // const filter = req.query.filter || 1
+  let filter = req.query.filter || 1
+  const includeAdult = req.query.includeAdult || false
 
   const find = req.query.find
 
-  let filter = 1
   if (find) {
-    if (table === Table.titles) {
-      filter = 'primaryTitle LIKE "%' + find + '%"'
-    } else if (table === Table.names) {
-      filter = 'primaryName LIKE "%' + find + '%"'
-    }
+    filter = 'primaryTitle LIKE "%' + find + '%" AND ' + !includeAdult ? '!isAdult' : '' + filter
+  } else {
+    filter = !includeAdult ? '!isAdult' : '' + filter
   }
 
   try {
@@ -35,9 +33,19 @@ const getOverview = (req, res, table) => {
       if (err) console.error(err.message)
 
       const totalRows = result[0].totalRows
-      db.query('SELECT * FROM titles WHERE ' + filter + ' ORDER BY ' + orderBy + ' LIMIT ' + RowsPerPage * page + ',' + RowsPerPage, (err, result, fields) => {
+
+      let page = req.query.page || 0
+      page = parseInt(page)
+
+      page = Math.min(page, Math.floor(totalRows / RowsPerPage)) // set to last page of result if page parameter is > last page
+
+      db.query('SELECT genreName FROM genres', (err, genres, fields) => {
         if (err) console.error(err.message)
-        res.render('overview', { result, fields, RowsPerPage, page, totalRows, orderBy, table })
+
+        db.query('SELECT ' + displayFields + ' FROM titles WHERE ' + filter + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage, (err, result, fields) => {
+          if (err) console.error(err.message)
+          res.render('overview', { result, fields, RowsPerPage, page, totalRows, params: new URLSearchParams(req.query).toString(), site: 'Titles', find, genres })
+        })
       })
     })
   } catch (error) {

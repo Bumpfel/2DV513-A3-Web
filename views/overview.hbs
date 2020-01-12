@@ -1,19 +1,35 @@
-<a href="/">Home</a> / {{ table }}
-<br><br>
- 
+Filters
+<div id="filters">
+  <input type="checkbox" id="adultFilter">
+  <label for="adultFilter">include adult movies</label>
+
+  <br>
+
+  <select id="genreFilter">
+    <option>All genres</option>
+    {{#each genres as | genre |}}
+    <option id="{{genre.genreName}}">
+      {{ genre.genreName }}
+    </option>
+    {{/each}}
+  </select>
+  
+</div> 
+<a href="/titles">Clear filters</a>
+<br>
+
 <div class="pagination">
-  {{ pagination page RowsPerPage totalRows orderBy }}
+  {{ pagination page RowsPerPage totalRows params }}
 </div>
 
-<label for="isAdult">is adult movie</label>
-<input type="checkbox" id="isAdult" onselect="() => console.log('test')">
-
 <table>
-  <tr>
+  <tr id="columnHeaders">
     {{#each fields as | field |}}
     <th>
-      <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}">
+      {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
+      <a href="#" id="{{ field.name }}">
         {{ field.name }}
+        {{ orderByArrow field.name @root.params }}
       </a>
     </th>
     {{/each}}
@@ -29,6 +45,10 @@
   </tr>
   {{/each}}
 </table>
+
+<div class="pagination">
+  {{ pagination page RowsPerPage totalRows params }}
+</div>
 
 <br>
 {{ numResults page RowsPerPage totalRows }}

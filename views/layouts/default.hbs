@@ -5,17 +5,24 @@
 <head>
 	<title>Eric & Erik</title>
 	<link href='http://fonts.googleapis.com/css?family=Schoolbell' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css" />
 	{{!-- <script type="module" src="/js/"></script> --}}
 	<meta charset="utf-8" />
 </head>
 
 <body>
-	<h1>Eric & Erics DB</h1>
-	
+	<h1>Eric & Eriks DB</h1>
+	<a href="/">Home</a> {{#if site}} / <a href="/{{lowercase site}}">{{site}}</a>{{/if}}
+	<br><br>
+
 	<form id="searchForm">
-		<input type="search" placeholder="Search...">
+		<input type="search" placeholder="Search..." value="{{find}}">
+		<br>
+		<input type="checkbox" id="exact">
+		<label for="exact">Exact match</label>
 	</form>
+	<br>
 
   {{{body}}}
 </body>
