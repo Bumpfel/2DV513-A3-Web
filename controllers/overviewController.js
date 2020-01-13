@@ -5,7 +5,7 @@ const db = require('../db/mysql')
 const controller = {}
 const RowsPerPage = 25
 
-const displayFields = ['primaryTitle', 'startYear', 'averageRating', 'numVotes'] // 'titleTypeId'
+const displayFields = ['primaryTitle AS Title', 'startYear AS Year', 'averageRating AS Rating', 'numVotes AS Votes']
 
 controller.getNamesOverview = async (req, res) => {
   getOverview(req, res)
@@ -56,8 +56,8 @@ const getOverview = (req, res) => {
     db.query('SELECT genreName FROM genres', (err, genres, fields) => {
       if (err) console.error(err.message)
 
-      const query = 'SELECT ' + displayFields + ' AS totalRows ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage
-      // console.log(query)
+      const query = 'SELECT ' + displayFields + ' ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage
+      console.log(query)
 
       db.query(query, (err, result, fields) => {
         if (err) console.error(err.message)
