@@ -5,7 +5,23 @@ const db = require('../db/mysql')
 const controller = {}
 const RowsPerPage = 25
 
-const displayFields = ['primaryTitle AS Title', 'startYear AS Year', 'averageRating AS Rating', 'numVotes AS Votes']
+// record title types, to replace them later (faster than selecting from multiple tables. at least with the query I came up with)
+const displayFields = ['primaryTitle AS Title', /* 'genreName AS Genre', *//* 'typeName AS Type', */ 'titleTypeId AS Type', 'startYear AS Year', 'averageRating AS Rating', 'numVotes AS Votes']
+const types = new Map()
+db.query('SELECT * FROM titletypes', (err, result, fields) => {
+  if (err || !result) console.log(err)
+
+  for (let i = 0; i < result.length; i++) {
+    types.set(result[i].id, result[i].typeName)
+  }
+})
+
+// record genre names
+const genres = []
+db.query('SELECT genreName FROM genres', (err, result, fields) => {
+  if (err) console.error('COUNT_ERROR: ', err.message)
+  result.forEach(row => genres.push(row))
+})
 
 controller.getNamesOverview = async (req, res) => {
   getOverview(req, res)
@@ -17,54 +33,94 @@ controller.getTitlesOverview = async (req, res) => {
 
 const getOverview = (req, res) => {
   const orderBy = req.query.orderBy || 'titles.id'
-  const includeAdult = req.query.includeAdult || false
 
-  const find = req.query.find
-  let filter
-  filter = !includeAdult && !req.query.genre === 'Adult' ? '!isAdult ' + (find ? 'AND ' : '') : ''
-  if (find) {
-    if (req.query.exact) {
-      filter += 'primaryTitle = "' + find + '"'
-    } else {
-      filter += 'primaryTitle LIKE "%' + find + '%"'
-    }
+  const filters = getFilterString(req.query)
+
+  let mainQuery = ''
+  if (req.query.titleType) {
+    mainQuery = 'JOIN titletypes ON titleTypeId = titletypes.id '
   }
-
-  let mainQuery
   if (req.query.genre) {
-    mainQuery = 'FROM titles JOIN titlegenrerelations ON titleId = titles.id JOIN genres ON genres.id = titlegenrerelations.genreId WHERE genreName = "' + req.query.genre + '"' + (filter.length > 0 ? ' AND ' : '') + filter
+    mainQuery += 'JOIN titlegenrerelations ON titles.id = titleId JOIN genres ON genres.id = titlegenrerelations.genreId WHERE genreName = "' + req.query.genre + '"' + filters
   } else {
-    mainQuery = 'FROM titles WHERE ' + (filter.length ? filter : 1)
+    mainQuery += 'WHERE 1' + filters
   }
 
-  const query = 'SELECT COUNT(titles.id) AS totalRows ' + mainQuery
-  // console.log(query)
-
-  db.query(query, (err, result, fields) => {
-    if (err || !result) {
-      console.error(err.message)
+  // count total rows
+  const sqlQueryCount = 'SELECT COUNT(titles.id) AS totalRows FROM titles ' + mainQuery
+  db.query(sqlQueryCount, (err, result, fields) => {
+    if (err) {
+      console.error('COUNT_ERR: ', err.message)
+      console.log(sqlQueryCount)
+    }
+    if (!result) {
+      console.log('No result')
       return
     }
 
     const totalRows = result[0].totalRows
 
+    // verify that page exist
     let page = req.query.page || 0
     page = parseInt(page)
-
     page = req.query.page ? Math.min(page, Math.floor((totalRows - 1) / RowsPerPage)) : 0 // set to last page of result if page parameter is > last page
 
-    db.query('SELECT genreName FROM genres', (err, genres, fields) => {
-      if (err) console.error(err.message)
+    // main query
+    const sqlQueryGet = 'SELECT ' + displayFields + ' FROM titles ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage // JOIN titletypes ON titleTypeId = titletypes.id
 
-      const query = 'SELECT ' + displayFields + ' ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage
-      console.log(query)
+    db.query(sqlQueryGet, (err, result, fields) => {
+      // console.log(sqlQueryGet)
+      if (err) {
+        console.error('QUERY_ERR: ', err.message)
+        console.log(sqlQueryGet)
+      }
 
-      db.query(query, (err, result, fields) => {
-        if (err) console.error(err.message)
-        res.render('overview', { result, fields, RowsPerPage, page, totalRows, params: new URLSearchParams(req.query).toString(), site: 'Titles', find, genres })
-      })
+      if (result) {
+        result.forEach(row => { row.Type = types.get(row.Type) }) // replace typeIds with names
+      }
+      res.render('overview', { result, fields, RowsPerPage, page, totalRows, params: new URLSearchParams(req.query).toString(), site: 'Titles', find: req.query.find, genres, types })
     })
   })
+}
+
+const getFilterString = query => {
+  const filterArr = []
+  const find = query.find
+
+  // adult filter
+  if (!query.includeAdult && !query.genre) {
+    filterArr.push('!isAdult')
+  }
+
+  // search filter
+  if (query.find) {
+    if (query.exact) {
+      filterArr.push('primaryTitle = "' + find + '"')
+    } else {
+      filterArr.push('primaryTitle LIKE "%' + find + '%"')
+    }
+  }
+
+  // type filter
+  if (query.titleType) {
+    let titleTypeId
+    for (const type of types.keys()) {
+      if (types.get(type) === query.titleType) {
+        titleTypeId = type
+      }
+    }
+
+    filterArr.push('titleTypeId = "' + titleTypeId + '"') // types.get(query.titleType)
+  }
+
+  // build string
+  let filters = ''
+  filterArr.forEach(filter => { filters += ' AND ' + filter })
+
+  // console.log(filterArr.length + ' active filters')
+  // console.log('filters: ' + filters)
+
+  return filters
 }
 
 module.exports = controller

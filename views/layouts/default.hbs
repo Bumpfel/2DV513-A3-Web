@@ -16,16 +16,18 @@
 	<a href="/">Home</a> {{#if site}} / <a href="/{{lowercase site}}">{{site}}</a>{{/if}}
 	<br><br>
 
-	<form id="searchForm">
-		<input type="search" placeholder="Search..." value="{{find}}">
-		<input type="submit" value="Search">
+	<fieldset>
+		<form id="searchForm">
+			<input type="search" placeholder="Search..." value="{{find}}">
+			<input type="submit" value="Search">
+			<br>
+			<input type="checkbox" id="exact">
+			<label for="exact">Exact match</label>
+		</form>
 		<br>
-		<input type="checkbox" id="exact">
-		<label for="exact">Exact match</label>
-	</form>
-	<br>
-
-  {{{body}}}
+		
+		{{{body}}}
+	</fieldset>
 </body>
 
 </html>
