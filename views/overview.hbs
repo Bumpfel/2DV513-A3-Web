@@ -1,9 +1,10 @@
 Filters
 <div id="filters">
-  <input type="checkbox" id="adultFilter">
-  <label for="adultFilter">include adult movies</label>
-
-  <br>
+    
+  <div id="adultBox">
+    <input type="checkbox" id="adultFilter">
+    <label for="adultFilter">include adult movies</label>
+  </div>
 
   <select id="genreFilter">
     <option>All genres</option>
@@ -13,6 +14,7 @@ Filters
     </option>
     {{/each}}
   </select>
+  Filter by genre
   
 </div> 
 <a href="/titles">Clear filters</a>

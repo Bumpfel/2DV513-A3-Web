@@ -13,7 +13,12 @@ loader.innerHTML = `
 
 const urlParams = new URLSearchParams(window.location.search)
 
-// set state of filters
+// set state of filter settings
+const exactMatch = document.querySelector('#exact')
+if (urlParams.get('exact')) {
+  exactMatch.checked = true
+}
+
 const adultFilter = document.querySelector('#adultFilter')
 if (urlParams.get('includeAdult')) {
   adultFilter.checked = true
@@ -23,9 +28,8 @@ const genreFilter = document.querySelector('#genreFilter')
 const selectedGenre = urlParams.get('genre')
 if (selectedGenre) {
   genreFilter.value = selectedGenre
-  if (selectedGenre === 'Adult') {
-    adultFilter.remove()
-    document.querySelector('label[for="adultFilter"').remove()
+  if (selectedGenre) {
+    document.querySelector('#adultBox').remove()
   }
 }
 
@@ -67,6 +71,11 @@ document.querySelector('#searchForm').addEventListener('submit', e => {
   const searchQuery = document.querySelector('input[type=search]').value
 
   urlParams.set('find', searchQuery)
+  if (exactMatch.checked) {
+    urlParams.set('exact', true)
+  } else {
+    urlParams.delete('exact')
+  }
 
   displayLoader()
   window.location.href = '?' + urlParams.toString()
@@ -87,7 +96,7 @@ adultFilter.addEventListener('click', e => {
 
 // genres
 genreFilter.addEventListener('change', e => {
-  const selectedGenre = genreFilter.value // genreFilter.item(genreFilter.selectedIndex).id
+  const selectedGenre = genreFilter.item(genreFilter.selectedIndex).id
 
   if (selectedGenre) {
     urlParams.set('genre', selectedGenre)
@@ -99,5 +108,6 @@ genreFilter.addEventListener('change', e => {
 })
 
 const displayLoader = () => {
+  document.body.classList.add('loader')
   document.body.appendChild(loader.content.cloneNode(true))
 }

@@ -1,34 +1,46 @@
-table {
-  /* border: 1px solid black; */
-  border-spacing: 0;
-}
-
+ /* Pagination */
 .pagination {
   width: 100%;
   text-align: center;
 }
 
-.pagination a {
+.pagination a, span {
   font-size: 150%;
-}
-
-
-
-.pagination a {
   text-decoration: none;
-  padding: 0 5px;
+  padding: 0 2px;
 }
+
+.pagination .disabled {
+  color: #ccc;
+}
+
+
+/* Table and cells */
+table {
+  width: 100%;
+  /* border: 1px solid black; */
+  border-spacing: 0;
+}
+
 
 tr:nth-child(2n) {
   background: #eee;
 }
 
 th, td {
+  text-align: left;
   /* border: 1px solid grey; */
   padding: 2px 5px;
 }
 
+/* Miscellaneous */
+
 .loader {
+  opacity: .5;
+  cursor: wait;
+}
+
+._loader {
   position: fixed;
   top: 0;
   left: 0;
@@ -38,7 +50,7 @@ th, td {
   cursor: wait;
 }
 
-.loader * {
+._loader * {
   position: absolute;
   font-size: 24px;
   margin: 25% 60% 75% 40%;

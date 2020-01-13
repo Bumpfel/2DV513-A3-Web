@@ -5,7 +5,6 @@ const con = mysql.createConnection({
   user: 'root',
   password: '',
   database: 'imdb_data'
-  // database: '2dv513a3'
 })
 
 let reconnectInterval
@@ -15,15 +14,7 @@ con.on('connect', () => {
   clearInterval(reconnectInterval)
 })
 
-con.on('error', () => console.log('Error connecting to mysql server!'))
-con.on('end', () => console.log('Connection to mysql server closed'))
+con.on('error', err => console.log(err))
+con.on('end', msg => console.log(msg))
 
 module.exports = con
-// module.exports.q = async queryString => {
-//   con.query(queryString, (err, result, fields) => {
-//     if (err) {
-//       throw Error(err.message)
-//     }
-//     return result
-//   })
-// }

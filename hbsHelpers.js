@@ -12,21 +12,29 @@ hbs.registerHelper('pagination', (page, RowsPerPage, totalRows, params) => {
 
   // previous page
   if (page > 0) {
+    urlParams.set('page', 0)
+    paginationLinks += `<a id='next' href='?${urlParams.toString()}'> &laquo; </a>`
     urlParams.set('page', page - 1)
     paginationLinks += `<a id='prev' href='?${urlParams.toString()}'> &#8249; </a>`
   } else {
-    paginationLinks += '&nbsp;&nbsp;&nbsp;&nbsp;'
+    paginationLinks += '<span class="disabled"> &laquo; </span>'
+    paginationLinks += '<span class="disabled"> &#8249; </span>'
   }
 
   // current page
-  paginationLinks += `<span>${page + 1}</span>`
+  paginationLinks += `${page + 1}`
 
   // next page
   if (page * RowsPerPage + RowsPerPage < totalRows) {
+    const lastPage = Math.floor(totalRows / RowsPerPage)
+
     urlParams.set('page', page + 1)
     paginationLinks += `<a id='next' href='?${urlParams.toString()}'> &#8250; </a>`
+    urlParams.set('page', lastPage)
+    paginationLinks += `<a id='next' href='?${urlParams.toString()}'> &raquo; </a>`
   } else {
-    paginationLinks += '&nbsp;&nbsp;&nbsp;&nbsp;'
+    paginationLinks += '<span class="disabled"> &#8250; </span>'
+    paginationLinks += '<span class="disabled"> &raquo; </span>'
   }
 
   return new hbs.SafeString(paginationLinks)
