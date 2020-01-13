@@ -45,18 +45,25 @@ document.querySelector('#columnHeaders').addEventListener('click', e => {
   e.preventDefault()
   if (e.target.nodeName === 'A') {
     const newOrder = e.target.id
-    const prevOrder = urlParams.get('orderBy') || ''
+    const tempOrder = urlParams.get('orderBy')
 
-    let sortOrder = prevOrder.split(' ')[1]
-    if (sortOrder === 'DESC') {
-      sortOrder = 'ASC'
-    } else if (sortOrder === 'ASC') {
-      sortOrder = 'DESC'
-    } else {
-      sortOrder = newOrder === 'primaryTitle' ? 'ASC' : 'DESC'
+    if (tempOrder) {
+      var prevOrder = tempOrder.split(' ')[0]
+      var prevSorting = tempOrder.split(' ')[1]
+    }
+    let sorting
+    // flip sorting
+    if (newOrder === prevOrder) { // previous order was this column
+      if (prevSorting === 'DESC') {
+        sorting = 'ASC'
+      } else if (prevSorting === 'ASC') {
+        sorting = 'DESC'
+      }
+    } else { // set default sorting
+      sorting = newOrder === 'Title' ? 'ASC' : 'DESC'
     }
 
-    urlParams.set('orderBy', newOrder + ' ' + sortOrder
+    urlParams.set('orderBy', newOrder + ' ' + sorting
     )
 
     displayLoader()

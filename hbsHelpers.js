@@ -64,9 +64,9 @@ hbs.registerHelper('orderByArrow', (col, params) => {
   if (orderBy.match(col)) {
     let returnString
     if (orderBy.match(new RegExp('desc', 'i'))) {
-      returnString = '&darr;'
+      returnString = '&#8681;'
     } else {
-      returnString = '&uarr;'
+      returnString = '&#8679;'
     }
     return new hbs.SafeString(returnString)
   }
