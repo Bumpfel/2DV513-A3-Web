@@ -22,12 +22,11 @@ hbs.registerHelper('pagination', (page, RowsPerPage, totalRows, params) => {
   }
 
   // current page
-  paginationLinks += `${page + 1}`
+  const lastPage = Math.floor(totalRows / RowsPerPage) + 1
+  paginationLinks += `${page + 1} / ${lastPage}`
 
   // next page
   if (page * RowsPerPage + RowsPerPage < totalRows) {
-    const lastPage = Math.floor(totalRows / RowsPerPage)
-
     urlParams.set('page', page + 1)
     paginationLinks += `<a id='next' href='?${urlParams.toString()}'> &#8250; </a>`
     urlParams.set('page', lastPage)
@@ -64,10 +63,14 @@ hbs.registerHelper('orderByArrow', (col, params) => {
   if (orderBy.match(col)) {
     let returnString
     if (orderBy.match(new RegExp('desc', 'i'))) {
-      returnString = '&darr;'
+      returnString = '&#8681;'
     } else {
-      returnString = '&uarr;'
+      returnString = '&#8679;'
     }
     return new hbs.SafeString(returnString)
   }
+})
+
+hbs.registerHelper('get', (arr, index) => {
+  return arr[index]
 })

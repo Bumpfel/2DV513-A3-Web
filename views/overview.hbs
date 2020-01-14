@@ -8,51 +8,77 @@ Filters
 
   <select id="genreFilter">
     <option>All genres</option>
-    {{#each genres as | genre |}}
-    <option id="{{genre.genreName}}">
-      {{ genre.genreName }}
+    {{#each genres}}
+    <option id="{{ genreName }}">
+      {{ genreName }}
     </option>
     {{/each}}
   </select>
   Filter by genre
+
+  <br>
+
+  <select id="typeFilter">
+    <option>All types</option>
+    {{#each types}}
+    <option id="{{ get this 1 }}">
+      {{ get this 1 }}
+    </option>
+    {{/each}}
+  </select>
+  Filter by type
   
 </div> 
-<a href="/titles">Clear filters</a>
+<a href="#" id="filterReset">Reset filters</a>
 <br>
 
-<div class="pagination">
-  {{ pagination page RowsPerPage totalRows params }}
-</div>
+{{#if find }}
+  <br>
+  Search results for string "{{ find }}"
+  <br>
+{{/if}}
 
-<table>
-  <tr id="columnHeaders">
-    {{#each fields as | field |}}
-    <th>
-      {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
-      <a href="#" id="{{ field.name }}">
-        {{ field.name }}
-        {{ orderByArrow field.name @root.params }}
-      </a>
-    </th>
+{{#if result}}
+  {{ numResults page RowsPerPage totalRows }}
+  
+  <div class="pagination">
+    {{ pagination page RowsPerPage totalRows params }}
+  </div>
+  
+
+  <table>
+    <tr id="columnHeaders">
+      {{#each fields as | field |}}
+      <th>
+        {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
+        <a href="#" id="{{ field.name }}">
+          {{ field.name }}
+          {{ orderByArrow field.name @root.params }}
+        </a>
+      </th>
+      {{/each}}
+    </tr>
+
+    {{#each result as | tuple |}}
+    <tr>
+      {{#each tuple as | row |}}
+      <td>
+        {{ row }}
+      </td>
+      {{/each}}
+    </tr>
     {{/each}}
-  </tr>
+  </table>
+    <div class="pagination">
+    {{ pagination page RowsPerPage totalRows params }}
+  </div>
 
-  {{#each result as | tuple |}}
-  <tr>
-    {{#each tuple as | row |}}
-    <td>
-      {{ row }}
-    </td>
-    {{/each}}
-  </tr>
-  {{/each}}
-</table>
-
-<div class="pagination">
-  {{ pagination page RowsPerPage totalRows params }}
-</div>
-
-<br>
-{{ numResults page RowsPerPage totalRows }}
+  <br>
+  {{ numResults page RowsPerPage totalRows }}
+  
+{{else}}
+  <br>
+  No results
+{{/if}}
 
 <script src="/js/ovFilters.js"></script>
