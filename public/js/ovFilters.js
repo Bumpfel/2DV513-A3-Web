@@ -12,6 +12,18 @@
 // </div>
 
 let urlParams = new URLSearchParams(window.location.search)
+
+const setAdultFilterVisibility = genreSelected => {
+  const adultBox = document.querySelector('#adultBox')
+  if (genreSelected) {
+    adultBox.classList.add('hidden')
+    urlParams.delete('includeAdult')
+  } else {
+    adultBox.classList.remove('hidden')
+    urlParams.set('includeAdult', true)
+  }
+}
+
 const search = document.querySelector('input[type=search]')
 
 // set state of filter settings
@@ -25,14 +37,7 @@ if (urlParams.get('includeAdult')) {
   adultFilter.checked = true
 }
 
-const genreFilter = document.querySelector('#genreFilter')
-const selectedGenre = urlParams.get('genre')
-if (selectedGenre) {
-  genreFilter.value = selectedGenre
-  if (selectedGenre) {
-    document.querySelector('#adultBox').remove()
-  }
-}
+setAdultFilterVisibility(urlParams.get('genre'))
 
 const typeFilter = document.querySelector('#typeFilter')
 const selectedType = urlParams.get('titleType')
@@ -103,32 +108,40 @@ document.querySelector('#filterReset').addEventListener('click', e => {
   go()
 })
 
-// adult
-adultFilter.addEventListener('click', e => {
+// use filters
+document.querySelector('#useFilters').addEventListener('click', e => {
+  getAdultFilterSettings()
+  getGenreFilterSettings()
+  getTypeFilterSettings()
+
+  go()
+})
+
+const getAdultFilterSettings = () => {
   if (adultFilter.checked) {
     urlParams.set('includeAdult', 'true')
   } else {
     urlParams.delete('includeAdult')
   }
-
-  go()
-})
+}
 
 // genres
+const genreFilter = document.querySelector('#genreFilter')
 genreFilter.addEventListener('change', e => {
   const selectedGenre = genreFilter.item(genreFilter.selectedIndex).id
+  setAdultFilterVisibility(selectedGenre)
+})
 
+const getGenreFilterSettings = () => {
+  const selectedGenre = genreFilter.item(genreFilter.selectedIndex).id
   if (selectedGenre) {
     urlParams.set('genre', selectedGenre)
   } else {
     urlParams.delete('genre')
   }
+}
 
-  go(e)
-})
-
-// types
-typeFilter.addEventListener('change', e => {
+const getTypeFilterSettings = () => {
   const selectedType = typeFilter.item(typeFilter.selectedIndex).id
 
   if (selectedType) {
@@ -136,9 +149,7 @@ typeFilter.addEventListener('change', e => {
   } else {
     urlParams.delete('titleType')
   }
-
-  go()
-})
+}
 
 /*************/
 

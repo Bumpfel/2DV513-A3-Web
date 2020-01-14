@@ -29,12 +29,10 @@ tr:nth-child(2n) {
 
 th, td {
   text-align: left;
-  /* border: 1px solid grey; */
   padding: 2px 5px;
 }
 
 /* Miscellaneous */
-
 .loader {
   opacity: .6;
   cursor: wait;
@@ -66,4 +64,13 @@ th, td {
 
 fieldset {
   border: 0;
+}
+
+.right {
+  text-align: right;
+}
+
+.hidden {
+  display: none;
+  /* visibility: hidden; */
 }
