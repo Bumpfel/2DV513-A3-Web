@@ -1,18 +1,10 @@
 'use strict'
 
-// const loader = document.createElement('template')
-// loader.innerHTML = `
-// <div class='loader'>
-// <i class="fa fa-spinner fa-spin" />
-// </div>
-// `
-
-// <div class="box">
-// Loading...
-// </div>
-
 let urlParams = new URLSearchParams(window.location.search)
 const search = document.querySelector('input[type=search]')
+if (urlParams.get('find')) {
+  search.value = urlParams.get('find')
+}
 
 // set state of filter settings
 const exactMatch = document.querySelector('#exact')
@@ -160,6 +152,6 @@ const go = () => {
 // functions
 const displayLoader = () => {
   document.querySelector('fieldset').disabled = true
-  document.body.classList.add('loader')
+  document.querySelector('main').classList.add('loader')
   // document.body.appendChild(loader.content.cloneNode(true))
 }

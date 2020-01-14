@@ -7,6 +7,16 @@ const con = mysql.createConnection({
   database: 'imdb_data'
 })
 
+const q = query => {
+  con.query(query, (err, result, fields) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+    return (result, fields)
+  })
+}
+
 let reconnectInterval
 
 con.on('connect', () => {

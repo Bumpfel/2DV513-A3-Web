@@ -1,4 +1,5 @@
 Filters
+<br>
 <div id="filters">
     
   <div id="adultBox">
@@ -20,17 +21,22 @@ Filters
 
   <select id="typeFilter">
     <option>All types</option>
-    {{#each types}}
-    <option id="{{ get this 1 }}">
-      {{ get this 1 }}
+    {{#each types as | type |}}
+    <option id="{{ type }}">
+      {{ type }}
     </option>
     {{/each}}
   </select>
   Filter by type
   
-</div> 
-<a href="#" id="filterReset">Reset filters</a>
-<br>
+  <br>
+  <br>
+  <a href="#" id="filterReset">Reset filters</a>
+</div>
+
+
+<div id="titleDetails">
+</div>
 
 {{#if find }}
   <br>
@@ -46,25 +52,25 @@ Filters
   </div>
   
 
-  <table>
+  <table id="data">
     <tr id="columnHeaders">
-      {{#each fields as | field |}}
-      <th>
-        {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
-        <a href="#" id="{{ field.name }}">
-          {{ field.name }}
-          {{ orderByArrow field.name @root.params }}
-        </a>
-      </th>
+      {{#each fields }}
+        <th id="{{name}}">
+          {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
+          <a href="#" id="{{ name }}">
+            {{ name }}
+            {{ orderByArrow name @root.params }}
+          </a>
+        </th>
       {{/each}}
     </tr>
 
-    {{#each result as | tuple |}}
-    <tr>
-      {{#each tuple as | row |}}
-      <td>
-        {{ row }}
-      </td>
+    {{#each result as | row |}}
+    <tr id="{{row.id}}">
+      {{#each row as | col |}}
+        <td id="{{@key}}">
+          {{ col }}
+        </td>
       {{/each}}
     </tr>
     {{/each}}
@@ -82,3 +88,4 @@ Filters
 {{/if}}
 
 <script src="/js/ovFilters.js"></script>
+<script src="/js/titleDetails.js"></script>

@@ -1,10 +1,8 @@
 const router = require('express').Router()
 const overviewController = require('../controllers/overviewController')
-const homeController = require('../controllers/homeController')
+const apiController = require('../controllers/apiController')
 
-router.get('/', homeController.getHomePage)
-
-router.get('/names', overviewController.getNamesOverview)
-router.get('/titles', overviewController.getTitlesOverview)
+router.get('/', overviewController.getOverview)
+router.get('/api/genres/:id', apiController.getGenres)
 
 module.exports = router

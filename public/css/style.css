@@ -1,12 +1,24 @@
- /* Pagination */
+.menu {
+  border-radius: 0 !important;
+}
+
+#searchForm {
+  color: #ccc;
+}
+
+main {
+  margin: 10px;
+}
+
+/* Pagination */
 .pagination {
   width: 100%;
   text-align: center;
 }
 
-.pagination a, span {
+.pagination a, .pagination span {
   font-size: 150%;
-  text-decoration: none;
+  text-decoration: none !important;
   padding: 0 2px;
 }
 
@@ -22,9 +34,12 @@ table {
   border-spacing: 0;
 }
 
+tr {
+  cursor: pointer;
+}
 
-tr:nth-child(2n) {
-  background: #eee;
+tr:nth-child(2n) { /* :not(.detailsContainer) */
+  background-color: #eee;
 }
 
 th, td {
@@ -33,32 +48,25 @@ th, td {
   padding: 2px 5px;
 }
 
-/* Miscellaneous */
-
-.loader {
-  opacity: .6;
-  cursor: wait;
+/* Details */
+tr.detailsContainer {
+  width: 500px;
+  height: 300px;
+  vertical-align: top;
+  background-color: #fff;
+  margin: 2px;
+  padding: 2px;
+  border: 2px solid grey;
 }
 
-/* .loader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(50, 50, 50, .4);
-} */
-
-/* .loader i {
-  position: absolute;
-  font-size: 24px;
-  top: 25%;
-  left: 40%; */
-  /* margin: 25% 60% 75% 40%; */
-/* } */
-
+/* Miscellaneous */
+.loader {
+  opacity: .6;
+  /* cursor: wait; */
+}
 
 #filters {
+  display: inline-block;
   width: 500px;
   padding: 10px 15px;
   border: 1px solid grey;
@@ -66,4 +74,13 @@ th, td {
 
 fieldset {
   border: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+/* hide fields from the query, but still make them available for the details box */
+#data #id, #data #Runtime {
+  display: none;
 }

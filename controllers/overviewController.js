@@ -6,8 +6,9 @@ const controller = {}
 const RowsPerPage = 25
 
 // record title types, to replace them later (faster than selecting from multiple tables. at least with the query I came up with)
-const displayFields = ['primaryTitle AS Title', /* 'genreName AS Genre', *//* 'typeName AS Type', */ 'titleTypeId AS Type', 'startYear AS Year', 'averageRating AS Rating', 'numVotes AS Votes']
+const displayFields = ['titles.id', 'primaryTitle AS Title', /* 'genreName AS Genre', *//* 'typeName AS Type', */ 'titleTypeId AS Type', 'startYear AS Year', 'runtimeMinutes AS Runtime', 'averageRating AS Rating', 'numVotes AS Votes']
 const types = new Map()
+
 db.query('SELECT * FROM titletypes', (err, result, fields) => {
   if (err || !result) console.log(err)
 
@@ -23,22 +24,14 @@ db.query('SELECT genreName FROM genres', (err, result, fields) => {
   result.forEach(row => genres.push(row))
 })
 
-controller.getNamesOverview = async (req, res) => {
-  getOverview(req, res)
-}
-
-controller.getTitlesOverview = async (req, res) => {
-  getOverview(req, res)
-}
-
-const getOverview = (req, res) => {
+controller.getOverview = (req, res) => {
   const orderBy = req.query.orderBy || 'titles.id'
 
   const filters = getFilterString(req.query)
 
   let mainQuery = ''
   if (req.query.titleType) {
-    mainQuery = 'JOIN titletypes ON titleTypeId = titletypes.id '
+    // mainQuery = 'JOIN titletypes ON titleTypeId = titletypes.id '
   }
   if (req.query.genre) {
     mainQuery += 'JOIN titlegenrerelations ON titles.id = titleId JOIN genres ON genres.id = titlegenrerelations.genreId WHERE genreName = "' + req.query.genre + '"' + filters
@@ -49,6 +42,7 @@ const getOverview = (req, res) => {
   // count total rows
   const sqlQueryCount = 'SELECT COUNT(titles.id) AS totalRows FROM titles ' + mainQuery
   db.query(sqlQueryCount, (err, result, fields) => {
+    // console.log('counted')
     if (err) {
       console.error('COUNT_ERR: ', err.message)
       console.log(sqlQueryCount)
@@ -67,7 +61,6 @@ const getOverview = (req, res) => {
 
     // main query
     const sqlQueryGet = 'SELECT ' + displayFields + ' FROM titles ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage // JOIN titletypes ON titleTypeId = titletypes.id
-
     db.query(sqlQueryGet, (err, result, fields) => {
       // console.log(sqlQueryGet)
       if (err) {
@@ -76,9 +69,12 @@ const getOverview = (req, res) => {
       }
 
       if (result) {
-        result.forEach(row => { row.Type = types.get(row.Type) }) // replace typeIds with names
+        result.forEach(row => {
+          row.Type = types.get(row.Type)
+        })
       }
-      res.render('overview', { result, fields, RowsPerPage, page, totalRows, params: new URLSearchParams(req.query).toString(), site: 'Titles', find: req.query.find, genres, types })
+
+      res.render('overview', { result, fields, RowsPerPage, page, totalRows, params: new URLSearchParams(req.query).toString(), site: 'Titles', find: req.query.find, genres, types: types.values() })
     })
   })
 }
