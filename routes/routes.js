@@ -1,10 +1,13 @@
 const router = require('express').Router()
 const overviewController = require('../controllers/overviewController')
-const homeController = require('../controllers/homeController')
+const apiController = require('../controllers/apiController')
 
-router.get('/', homeController.getHomePage)
+try {
+  router.get('/', overviewController.getOverview)
+} catch (err) {
+  console.log('-----FEEEEEEEEEEL')
+}
 
-router.get('/names', overviewController.getNamesOverview)
-router.get('/titles', overviewController.getTitlesOverview)
+router.get('/api/genres/:id', apiController.getGenres)
 
 module.exports = router

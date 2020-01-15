@@ -1,69 +1,153 @@
- /* Pagination */
+.menu {
+  border-radius: 0 !important;
+}
+
+#searchForm {
+  color: #ccc;
+}
+
+main {
+  margin: 10px;
+  vertical-align: top;
+}
+
+p {
+  margin: 0 !important;
+}
+
+/* Filters */
+#filters {
+  width: 300px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#filtersBox {
+  padding: 10px 15px;
+  border: 1px solid grey;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+#filters select {
+  margin: 5px;
+}
+/* ****** */
+
+
+/* Title details */
+#titleDetails {
+  display: inline-block;
+}
+
+#titleDetails .box {
+  display: flex;
+  flex-wrap: nowrap;
+  border: 1px solid grey;
+  max-width: 500px;
+}
+
+#titleDetails .side {
+  /* border: 1px solid blue; */
+  display: inline-block;
+  margin: 10px;
+  margin-right: 0;
+  vertical-align: top;
+  text-align: center;
+  width: 120px;
+  max-width: 120px;
+}
+#titleDetails #genre {
+  display: block;
+  font-size: 18px;
+}
+#titleDetails img {
+  max-height: 100px;
+}
+
+#titleDetails .main {
+  /* border: 1px solid orange; */
+  display: inline-block;
+  margin: 10px;
+  vertical-align: top;
+  text-align: center;
+}
+#titleDetails #title, #titleDetails #genre {
+  margin: 10px 0;
+}
+#titleDetails #title {
+  font-size: 24px;
+}
+#titleDetails p {
+  display: inline-block;
+  margin: 10px;
+}
+#titleDetails .info > div {
+  margin: 10px;
+}
+/* ************** */
+
+
+/* Pagination */
 .pagination {
   width: 100%;
+  margin: 0 !important;
+  /* display: inline-block; */
   text-align: center;
 }
 
-.pagination a, span {
+.pagination a, .pagination span {
   font-size: 150%;
-  text-decoration: none;
+  text-decoration: none !important;
   padding: 0 2px;
 }
 
 .pagination .disabled {
   color: #ccc;
 }
+/***************/
 
 
 /* Table and cells */
 table {
   width: 100%;
-  /* border: 1px solid black; */
   border-spacing: 0;
 }
 
+tr {
+  cursor: pointer;
+}
 
 tr:nth-child(2n) {
-  background: #eee;
+  background-color: #eee;
 }
 
 th, td {
   text-align: left;
-  /* border: 1px solid grey; */
   padding: 2px 5px;
 }
 
-/* Miscellaneous */
+.emphasized {
+  font-weight: bold;
+}
+/***************/
 
+
+/* Miscellaneous */
 .loader {
   opacity: .6;
-  cursor: wait;
-}
-
-/* .loader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(50, 50, 50, .4);
-} */
-
-/* .loader i {
-  position: absolute;
-  font-size: 24px;
-  top: 25%;
-  left: 40%; */
-  /* margin: 25% 60% 75% 40%; */
-/* } */
-
-
-#filters {
-  width: 500px;
-  padding: 10px 15px;
-  border: 1px solid grey;
+  /* cursor: wait; */
 }
 
 fieldset {
   border: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+/* hide fields from the query, but still make them available for the details box */
+#data #id, #data #Runtime, #data #runtime {
+  display: none;
 }

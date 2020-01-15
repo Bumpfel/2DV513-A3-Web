@@ -1,70 +1,81 @@
-Filters
 <div id="filters">
+  Filters
+  <div id="filtersBox">
+
+    <br>
+    <div id="adultBox">
+      <input type="checkbox" id="adultFilter" checked>
+      <label for="adultFilter">include adult movies</label>
+    </div>
+
+    <select id="genreFilter">
+      <option>All genres</option>
+      {{#each genres}}
+      <option id="{{ genreName }}">
+        {{#if (equal genreName 'N') }}
+          Uncategorized
+        {{else}}
+          {{ genreName }}
+        {{/if}}
+      </option>
+      {{/each}}
+    </select>
+    Filter by genre
+
+    <br>
+
+    <select id="typeFilter">
+      <option>All types</option>
+      {{#each types as | type |}}
+      <option id="{{ type }}">
+        {{ type }}
+      </option>
+      {{/each}}
+    </select>
+    Filter by type
     
-  <div id="adultBox">
-    <input type="checkbox" id="adultFilter">
-    <label for="adultFilter">include adult movies</label>
+    <br>
+    <br>
+    <a href="#" id="filterReset">Reset filters</a>
+    <br>
+    <br>
   </div>
+</div>
 
-  <select id="genreFilter">
-    <option>All genres</option>
-    {{#each genres}}
-    <option id="{{ genreName }}">
-      {{ genreName }}
-    </option>
-    {{/each}}
-  </select>
-  Filter by genre
-
-  <br>
-
-  <select id="typeFilter">
-    <option>All types</option>
-    {{#each types}}
-    <option id="{{ get this 1 }}">
-      {{ get this 1 }}
-    </option>
-    {{/each}}
-  </select>
-  Filter by type
-  
-</div> 
-<a href="#" id="filterReset">Reset filters</a>
-<br>
+<div id="titleDetails"></div>
 
 {{#if find }}
   <br>
-  Search results for string "{{ find }}"
-  <br>
+  <p>Search results for string "{{ find }}"</p>
 {{/if}}
 
 {{#if result}}
-  {{ numResults page RowsPerPage totalRows }}
+  <p>{{ numResults page RowsPerPage totalRows }}</p>
   
   <div class="pagination">
     {{ pagination page RowsPerPage totalRows params }}
   </div>
   
 
-  <table>
+  <table id="data">
     <tr id="columnHeaders">
-      {{#each fields as | field |}}
-      <th>
-        {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
-        <a href="#" id="{{ field.name }}">
-          {{ field.name }}
-          {{ orderByArrow field.name @root.params }}
-        </a>
-      </th>
+      {{#each fields }}
+        <th id="{{name}}">
+          {{!-- <a href="?page={{ @root.page }}&orderBy={{ field.name }}{{#if (equal field.name @root.orderBy)}}%20desc{{/if}}"> --}}
+          <a href="#" id="{{ name }}">
+            {{ name }}
+            {{ orderByArrow name @root.params }}
+          </a>
+        </th>
       {{/each}}
     </tr>
 
-    {{#each result as | tuple |}}
-    <tr>
-      {{#each tuple as | row |}}
-      <td>
-        {{ row }}
-      </td>
+    {{#each result as | row |}}
+    <tr id="{{row.id}}">
+      {{#each row as | col |}}
+        <td id="{{lowercase @key}}">
+          {{ col }}
+        </td>
       {{/each}}
     </tr>
     {{/each}}
@@ -82,3 +93,4 @@ Filters
 {{/if}}
 
 <script src="/js/ovFilters.js"></script>
+<script src="/js/titleDetails.js"></script>

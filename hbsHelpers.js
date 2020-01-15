@@ -70,7 +70,3 @@ hbs.registerHelper('orderByArrow', (col, params) => {
     return new hbs.SafeString(returnString)
   }
 })
-
-hbs.registerHelper('get', (arr, index) => {
-  return arr[index]
-})

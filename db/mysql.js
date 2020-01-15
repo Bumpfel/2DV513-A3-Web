@@ -7,11 +7,8 @@ const con = mysql.createConnection({
   database: 'imdb_data'
 })
 
-let reconnectInterval
-
 con.on('connect', () => {
   console.log('Connected to mysql server')
-  clearInterval(reconnectInterval)
 })
 
 con.on('error', err => console.log(err))

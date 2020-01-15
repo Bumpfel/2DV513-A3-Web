@@ -1,34 +1,26 @@
 'use strict'
 
-// const loader = document.createElement('template')
-// loader.innerHTML = `
-// <div class='loader'>
-// <i class="fa fa-spinner fa-spin" />
-// </div>
-// `
-
-// <div class="box">
-// Loading...
-// </div>
-
 let urlParams = new URLSearchParams(window.location.search)
 const search = document.querySelector('input[type=search]')
+if (urlParams.get('find')) {
+  search.value = urlParams.get('find')
+}
 
-// set state of filter settings
+/** set state of filter settings **/
 const exactMatch = document.querySelector('#exact')
 if (urlParams.get('exact')) {
   exactMatch.checked = true
 }
 
 const adultFilter = document.querySelector('#adultFilter')
-if (urlParams.get('includeAdult')) {
-  adultFilter.checked = true
+if (urlParams.get('excludeAdult')) {
+  adultFilter.checked = false
 }
 
 const genreFilter = document.querySelector('#genreFilter')
 const selectedGenre = urlParams.get('genre')
 if (selectedGenre) {
-  genreFilter.value = selectedGenre
+  genreFilter.value = selectedGenre === 'N' ? 'Uncategorized' : selectedGenre
   if (selectedGenre) {
     document.querySelector('#adultBox').remove()
   }
@@ -40,6 +32,7 @@ if (selectedType) {
   typeFilter.value = selectedType
   // typeFilter.value = typeFilter.querySelector('#' + selectedType).value
 }
+/* ***************** */
 
 // pagination listeners
 document.querySelectorAll('.pagination').forEach(pagination => pagination.addEventListener('click', e => {
@@ -105,10 +98,10 @@ document.querySelector('#filterReset').addEventListener('click', e => {
 
 // adult
 adultFilter.addEventListener('click', e => {
-  if (adultFilter.checked) {
-    urlParams.set('includeAdult', 'true')
+  if (!adultFilter.checked) {
+    urlParams.set('excludeAdult', 'true')
   } else {
-    urlParams.delete('includeAdult')
+    urlParams.delete('excludeAdult')
   }
 
   go()
@@ -146,6 +139,8 @@ typeFilter.addEventListener('change', e => {
 const go = () => {
   if (search.value === '') {
     urlParams.delete('find')
+  } else {
+    urlParams.set('find', search.value)
   }
   if (exactMatch.checked) {
     urlParams.set('exact', true)
@@ -160,6 +155,6 @@ const go = () => {
 // functions
 const displayLoader = () => {
   document.querySelector('fieldset').disabled = true
-  document.body.classList.add('loader')
+  document.querySelector('main').classList.add('loader')
   // document.body.appendChild(loader.content.cloneNode(true))
 }
