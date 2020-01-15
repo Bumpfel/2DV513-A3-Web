@@ -8,11 +8,91 @@
 
 main {
   margin: 10px;
+  vertical-align: top;
 }
+
+p {
+  margin: 0 !important;
+}
+
+/* Filters */
+#filters {
+  width: 300px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#filtersBox {
+  padding: 10px 15px;
+  border: 1px solid grey;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+#filters select {
+  margin: 5px;
+}
+/* ****** */
+
+
+/* Title details */
+#titleDetails {
+  display: inline-block;
+}
+
+#titleDetails .box {
+  display: flex;
+  flex-wrap: nowrap;
+  border: 1px solid grey;
+  max-width: 500px;
+}
+
+#titleDetails .side {
+  /* border: 1px solid blue; */
+  display: inline-block;
+  margin: 10px;
+  margin-right: 0;
+  vertical-align: top;
+  text-align: center;
+  width: 120px;
+  max-width: 120px;
+}
+#titleDetails #genre {
+  display: block;
+  font-size: 18px;
+}
+#titleDetails img {
+  max-height: 100px;
+}
+
+#titleDetails .main {
+  /* border: 1px solid orange; */
+  display: inline-block;
+  margin: 10px;
+  vertical-align: top;
+  text-align: center;
+}
+#titleDetails #title, #titleDetails #genre {
+  margin: 10px 0;
+}
+#titleDetails #title {
+  font-size: 24px;
+}
+#titleDetails p {
+  display: inline-block;
+  margin: 10px;
+}
+#titleDetails .info > div {
+  margin: 10px;
+}
+/* ************** */
+
 
 /* Pagination */
 .pagination {
   width: 100%;
+  margin: 0 !important;
+  /* display: inline-block; */
   text-align: center;
 }
 
@@ -25,12 +105,12 @@ main {
 .pagination .disabled {
   color: #ccc;
 }
+/***************/
 
 
 /* Table and cells */
 table {
   width: 100%;
-  /* border: 1px solid black; */
   border-spacing: 0;
 }
 
@@ -38,38 +118,25 @@ tr {
   cursor: pointer;
 }
 
-tr:nth-child(2n) { /* :not(.detailsContainer) */
+tr:nth-child(2n) {
   background-color: #eee;
 }
 
 th, td {
   text-align: left;
-  /* border: 1px solid grey; */
   padding: 2px 5px;
 }
 
-/* Details */
-tr.detailsContainer {
-  width: 500px;
-  height: 300px;
-  vertical-align: top;
-  background-color: #fff;
-  margin: 2px;
-  padding: 2px;
-  border: 2px solid grey;
+.emphasized {
+  font-weight: bold;
 }
+/***************/
+
 
 /* Miscellaneous */
 .loader {
   opacity: .6;
   /* cursor: wait; */
-}
-
-#filters {
-  display: inline-block;
-  width: 500px;
-  padding: 10px 15px;
-  border: 1px solid grey;
 }
 
 fieldset {
@@ -81,6 +148,6 @@ fieldset {
 }
 
 /* hide fields from the query, but still make them available for the details box */
-#data #id, #data #Runtime {
+#data #id, #data #Runtime, #data #runtime {
   display: none;
 }

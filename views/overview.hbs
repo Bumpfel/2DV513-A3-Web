@@ -1,51 +1,56 @@
-Filters
-<br>
 <div id="filters">
+  Filters
+  <div id="filtersBox">
+
+    <br>
+    <div id="adultBox">
+      <input type="checkbox" id="adultFilter" checked>
+      <label for="adultFilter">include adult movies</label>
+    </div>
+
+    <select id="genreFilter">
+      <option>All genres</option>
+      {{#each genres}}
+      <option id="{{ genreName }}">
+        {{#if (equal genreName 'N') }}
+          Uncategorized
+        {{else}}
+          {{ genreName }}
+        {{/if}}
+      </option>
+      {{/each}}
+    </select>
+    Filter by genre
+
+    <br>
+
+    <select id="typeFilter">
+      <option>All types</option>
+      {{#each types as | type |}}
+      <option id="{{ type }}">
+        {{ type }}
+      </option>
+      {{/each}}
+    </select>
+    Filter by type
     
-  <div id="adultBox">
-    <input type="checkbox" id="adultFilter">
-    <label for="adultFilter">include adult movies</label>
+    <br>
+    <br>
+    <a href="#" id="filterReset">Reset filters</a>
+    <br>
+    <br>
   </div>
-
-  <select id="genreFilter">
-    <option>All genres</option>
-    {{#each genres}}
-    <option id="{{ genreName }}">
-      {{ genreName }}
-    </option>
-    {{/each}}
-  </select>
-  Filter by genre
-
-  <br>
-
-  <select id="typeFilter">
-    <option>All types</option>
-    {{#each types as | type |}}
-    <option id="{{ type }}">
-      {{ type }}
-    </option>
-    {{/each}}
-  </select>
-  Filter by type
-  
-  <br>
-  <br>
-  <a href="#" id="filterReset">Reset filters</a>
 </div>
 
-
-<div id="titleDetails">
-</div>
+<div id="titleDetails"></div>
 
 {{#if find }}
   <br>
-  Search results for string "{{ find }}"
-  <br>
+  <p>Search results for string "{{ find }}"</p>
 {{/if}}
 
 {{#if result}}
-  {{ numResults page RowsPerPage totalRows }}
+  <p>{{ numResults page RowsPerPage totalRows }}</p>
   
   <div class="pagination">
     {{ pagination page RowsPerPage totalRows params }}
@@ -68,7 +73,7 @@ Filters
     {{#each result as | row |}}
     <tr id="{{row.id}}">
       {{#each row as | col |}}
-        <td id="{{@key}}">
+        <td id="{{lowercase @key}}">
           {{ col }}
         </td>
       {{/each}}

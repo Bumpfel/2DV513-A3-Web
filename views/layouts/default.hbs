@@ -3,11 +3,10 @@
 <html>
 
 <head>
-	<title>Movie database</title>
+	<title>Media database</title>
 	<link href='http://fonts.googleapis.com/css?family=Schoolbell' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css" />
-	<link rel="stylesheet" type="text/css" href="/css/detailsBox.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 	{{!-- <script type="module" src="/js/"></script> --}}
 	<meta charset="utf-8" />
@@ -18,7 +17,7 @@
 		<nav class="navbar navbar-inverse menu">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="/">Movie database</a>
+					<a class="navbar-brand" href="/">Media database</a>
 				</div>
 				<ul class="nav navbar-nav">
 					{{!-- <li class="active"><a href="#">Titles</a></li> --}}
@@ -31,8 +30,9 @@
 						<input type="search" class="form-control" placeholder="Search for titles..." name="search" autocomplete="off">
 						<button type="submit" class="btn btn-default">Search</button>
 					</div>
-					<br>
-					<input type="checkbox" id="exact">Exact match
+					&nbsp;
+					{{!-- <br> --}}
+					<input type="checkbox" id="exact" style="padding: 10px !important">Exact match
 				</form>
 			</div>
 		</nav>

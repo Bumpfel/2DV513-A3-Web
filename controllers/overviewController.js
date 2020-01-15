@@ -10,8 +10,10 @@ const displayFields = ['titles.id', 'primaryTitle AS Title', /* 'genreName AS Ge
 const types = new Map()
 
 db.query('SELECT * FROM titletypes', (err, result, fields) => {
-  if (err || !result) console.log(err)
-
+  if (err || !result.length) {
+    console.log(err)
+    return
+  }
   for (let i = 0; i < result.length; i++) {
     types.set(result[i].id, result[i].typeName)
   }
@@ -20,12 +22,22 @@ db.query('SELECT * FROM titletypes', (err, result, fields) => {
 // record genre names
 const genres = []
 db.query('SELECT genreName FROM genres', (err, result, fields) => {
-  if (err) console.error('COUNT_ERROR: ', err.message)
-  result.forEach(row => genres.push(row))
+  if (err || !result.length) {
+    console.error('COUNT_ERROR: ', err.message)
+    return
+  }
+  result.forEach(row => {
+    genres.push(row)
+  })
 })
 
 controller.getOverview = (req, res) => {
-  const orderBy = req.query.orderBy || 'titles.id'
+  const regex = new RegExp('\'', 'g')
+  if (req.query.orderBy) {
+    var orderBy = db.escape(req.query.orderBy).replace(regex, '')
+  } else {
+    orderBy = 'titles.id'
+  }
 
   const filters = getFilterString(req.query)
 
@@ -34,13 +46,14 @@ controller.getOverview = (req, res) => {
     // mainQuery = 'JOIN titletypes ON titleTypeId = titletypes.id '
   }
   if (req.query.genre) {
-    mainQuery += 'JOIN titlegenrerelations ON titles.id = titleId JOIN genres ON genres.id = titlegenrerelations.genreId WHERE genreName = "' + req.query.genre + '"' + filters
+    mainQuery += 'JOIN titlegenrerelations ON titles.id = titleId JOIN genres ON genres.id = titlegenrerelations.genreId WHERE genreName = ' + db.escape(req.query.genre) + filters
   } else {
     mainQuery += 'WHERE 1' + filters
   }
 
   // count total rows
   const sqlQueryCount = 'SELECT COUNT(titles.id) AS totalRows FROM titles ' + mainQuery
+
   db.query(sqlQueryCount, (err, result, fields) => {
     // console.log('counted')
     if (err) {
@@ -57,12 +70,12 @@ controller.getOverview = (req, res) => {
     // verify that page exist
     let page = req.query.page || 0
     page = parseInt(page)
-    page = req.query.page ? Math.min(page, Math.floor((totalRows - 1) / RowsPerPage)) : 0 // set to last page of result if page parameter is > last page
+    page = req.query.page && totalRows > 0 ? Math.min(page, Math.floor((totalRows - 1) / RowsPerPage)) : 0 // set to last page of result if page parameter is > last page
 
     // main query
     const sqlQueryGet = 'SELECT ' + displayFields + ' FROM titles ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage // JOIN titletypes ON titleTypeId = titletypes.id
     db.query(sqlQueryGet, (err, result, fields) => {
-      // console.log(sqlQueryGet)
+      console.log(sqlQueryGet)
       if (err) {
         console.error('QUERY_ERR: ', err.message)
         console.log(sqlQueryGet)
@@ -84,16 +97,16 @@ const getFilterString = query => {
   const find = query.find
 
   // adult filter
-  if (!query.includeAdult && !query.genre) {
+  if (query.excludeAdult && !query.genre) {
     filterArr.push('!isAdult')
   }
 
   // search filter
   if (query.find) {
     if (query.exact) {
-      filterArr.push('primaryTitle = "' + find + '"')
+      filterArr.push('primaryTitle = ' + db.escape(find))
     } else {
-      filterArr.push('primaryTitle LIKE "%' + find + '%"')
+      filterArr.push('primaryTitle LIKE ' + db.escape('%' + find + '%'))
     }
   }
 
@@ -106,15 +119,12 @@ const getFilterString = query => {
       }
     }
 
-    filterArr.push('titleTypeId = "' + titleTypeId + '"') // types.get(query.titleType)
+    filterArr.push('titleTypeId = ' + db.escape(titleTypeId)) // types.get(query.titleType)
   }
 
   // build string
   let filters = ''
   filterArr.forEach(filter => { filters += ' AND ' + filter })
-
-  // console.log(filterArr.length + ' active filters')
-  // console.log('filters: ' + filters)
 
   return filters
 }
