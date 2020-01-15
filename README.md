@@ -1,5 +1,9 @@
 # Running instructions
 
+## Import database structure
+* Create an empty database
+* Import sql/db_structure.sql
+
 ## Install node if not installed
 * https://nodejs.org/en/
 
