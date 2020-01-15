@@ -4,6 +4,9 @@
 * Create an empty database
 * Import sql/db_structure.sql
 
+To get any data to browse through in the database, you need to run the parser (not necessary to run the application)
+https://github.com/Bumpfel/2DV513-A3-DataParser
+
 ## Install node if not installed
 * https://nodejs.org/en/
 
