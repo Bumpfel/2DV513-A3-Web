@@ -86,9 +86,9 @@ const setContent = async () => {
   const titleType = activeRow.querySelector('#type').innerText
   const img = titleDetails.querySelector('img')
   if (titleType.startsWith('tv')) {
-    img.src = 'icons/tv.png'
+    img.src = '/icons/tv.png'
   } else {
-    img.src = 'icons/' + titleType + '.png'
+    img.src = '/icons/' + titleType + '.png'
   }
   img.title = titleType
   titleDetails.querySelector('.side').insertBefore(document.createTextNode(titleType), img.nextElementSibling)

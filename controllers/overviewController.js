@@ -75,7 +75,7 @@ controller.getOverview = (req, res) => {
     // main query
     const sqlQueryGet = 'SELECT ' + displayFields + ' FROM titles ' + mainQuery + ' ORDER BY ' + orderBy + ', numVotes DESC LIMIT ' + RowsPerPage * page + ',' + RowsPerPage // JOIN titletypes ON titleTypeId = titletypes.id
     db.query(sqlQueryGet, (err, result, fields) => {
-      console.log(sqlQueryGet)
+      // console.log(sqlQueryGet)
       if (err) {
         console.error('QUERY_ERR: ', err.message)
         console.log(sqlQueryGet)
